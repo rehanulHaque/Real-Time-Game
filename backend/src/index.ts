@@ -15,6 +15,12 @@ const io = new Server(server, {
   },
 });
 
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 type User = { userId: string; name: string };
 type Room = {
   users: User[];
@@ -23,26 +29,6 @@ type Room = {
 };
 
 const rooms: Map<string, Room> = new Map();
-
-function checkWinner(gameState: string[]) {
-  const winningCombinations = [
-    [0, 1, 2], [3, 4, 5], [6, 7, 8],
-    [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 8], [2, 4, 6],
-  ];
-
-  for (const [a, b, c] of winningCombinations) {
-    if (
-      gameState[a] &&
-      gameState[a] === gameState[b] &&
-      gameState[a] === gameState[c]
-    ) {
-      return { winner: gameState[a], winningCells: [a, b, c] };
-    }
-  }
-
-  return null;
-}
 
 io.on("connection", (socket) => {
   console.log("Connected:", socket.id);
@@ -187,17 +173,9 @@ socket.on("restart_game", ({ roomId }) => {
 
 });
 
-app.use(express.static(path.join(__dirname, "public")));
 
-app.get("*", (_, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
-});
-
-server.listen(3000, () => {
-  console.log("Listening on http://localhost:3000");
 });
