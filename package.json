@@ -2,8 +2,8 @@
   "name": "tic-tac-toe-fullstack",
   "private": true,
   "scripts": {
-    "build": "cd client && npm run build && cd ../server && npm run build",
-    "start": "node server/dist/index.js"
+    "build": "cd client && npm run build && cd ../backend && npm run build",
+    "start": "node backend/dist/index.js"
   },
-  "workspaces": ["client", "server"]
+  "workspaces": ["frontend", "backend"]
 }
